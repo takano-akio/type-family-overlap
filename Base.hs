@@ -14,21 +14,17 @@ type instance F (a -> a -> a) = IO String
 -- GHC does not notice LA is an infinite type, otherwise
 -- it will complain.
 --
--- This can be done by using 3 auxiliary modules, each of which
+-- This can be done by using 2 auxiliary modules, each of which
 -- provides a fragment of the proof using different partial knowledge
 -- about the definition of LA.
 --
 -- LA -> LA
--- = {LA~LB}     -- only Int_T0.hs knows this
--- LA -> LB
--- = {LB~LC->LC} -- only T0_T1.hs knows this
--- LA -> LC -> LC
--- = {LA~LC}     -- only T1_IOString.hs knows this
+-- = {LA~LB->LB} -- only Int_T.hs knows this
+-- LA -> LB -> LB
+-- = {LA~LB}     -- only T_IOString.hs knows this
 -- LA -> LA -> LA
 
 type family LA
 type family LB
-type family LC
 
-data T0 = T0 (F (LA -> LB))
-data T1 = T1 (F (LA -> LC -> LC))
+data T = T (F (LA -> LB -> LB))
